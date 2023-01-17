@@ -36,9 +36,11 @@ const MainHome = () => {
 
   const functionRecoversProducts = async () => {
     let disponibleProducts = await recoverProducts(firestore, null, 10000, null);
+    console.log('disponibleProducts', disponibleProducts);
     if (disponibleProducts && listOfProducts.length === 0) {
       disponibleProducts.map((product) => {
         if (!listOfProducts.includes(product)) {
+          console.log('product', product);
           setListOfProducts((prevState) => [...prevState, product]);
         }
       });
@@ -54,26 +56,27 @@ const MainHome = () => {
   };
 
   useEffect(() => {
-    functionRecoversProducts();
+    listOfProducts.length === 0 && functionRecoversProducts();
   }, []);
 
-  const handleSeeMoreTopProduct = async (e) => {
-    e.preventDefault();
-    var price = 1000;
-    listOfProducts.map((product) => {
-      if (product.price < price) {
-        price = product.price - 1;
-      }
-    });
-    let newDisponibleProducts = await recoverProducts(firestore, null, price, null);
-    if (newDisponibleProducts) {
-      newDisponibleProducts.map((product) => {
-        if (!listOfProducts.includes(product)) {
-          setListOfProducts((prevState) => [...prevState, product]);
-        }
-      });
-    }
-  };
+  //TODO para ver mas productos
+  // const handleSeeMoreTopProduct = async (e) => {
+  //   e.preventDefault();
+  //   var price = 1000;
+  //   listOfProducts.map((product) => {
+  //     if (product.price < price) {
+  //       price = product.price - 1;
+  //     }
+  //   });
+  //   let newDisponibleProducts = await recoverProducts(firestore, null, price, null);
+  //   if (newDisponibleProducts) {
+  //     newDisponibleProducts.map((product) => {
+  //       if (!listOfProducts.includes(product)) {
+  //         setListOfProducts((prevState) => [...prevState, product]);
+  //       }
+  //     });
+  //   }
+  // };
 
   return (
     <main>

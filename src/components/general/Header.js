@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import Options from './navbar/Options';
 import { HeaderContainer, FlexContainer, MenuDesktopContainer } from './styles/sHeader';
@@ -8,8 +8,10 @@ import { ReactComponent as HomeSVG } from './../../icons/menu/home.svg';
 import { ReactComponent as ShoppingCartSVG } from './../../icons/menu/shoppingCart.svg';
 import { ReactComponent as PurchaseSVG } from './../../icons/menu/purchase.svg';
 import { ReactComponent as ProfileSVG } from './../../icons/menu/profile.svg';
+import { ReactComponent as AdminSVG } from './../../icons/menu/admin.svg';
+import { AppContext } from '../../App';
 
-const listOptionsMenu = [
+let listOptionsMenu = [
   {
     id: 'home',
     icon: <HomeSVG className="icon" />,
@@ -33,6 +35,19 @@ const listOptionsMenu = [
 ];
 
 const Header = () => {
+  const { dataOfUser } = useContext(AppContext);
+
+  if (dataOfUser?.typeOfUser === 'admin') {
+    //agregar un nuevo elemento al array en el inicio si no existe
+    if (!listOptionsMenu.find((option) => option.id === 'addProducts')) {
+      listOptionsMenu.unshift({
+        id: 'addProducts',
+        icon: <AdminSVG className="icon" />,
+        link: '/addProducts',
+      });
+    }
+  }
+
   return (
     <header>
       <HeaderContainer>

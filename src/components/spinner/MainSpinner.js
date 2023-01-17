@@ -1,6 +1,6 @@
 import React from 'react';
-import styled, { keyframes } from 'styled-components'
-import { ReactComponent as LogoSVG } from './../../icons/brand/logo.svg'
+import styled, { keyframes } from 'styled-components';
+import { ReactComponent as LogoSVG } from './../../icons/brand/logo.svg';
 
 const faded = keyframes`
   0% {
@@ -13,7 +13,7 @@ const faded = keyframes`
     opacity: .1;
     transform: scale(0.98);
   }
-`
+`;
 
 const SpinnerContainer = styled.div`
   height: 100vh;
@@ -24,22 +24,23 @@ const SpinnerContainer = styled.div`
   position: absolute;
   z-index: 2000;
   top: 0;
-  background: ${props => props.theme.backgroundColor};
-  
+  background: ${(props) => props.theme.backgroundColor};
+
   svg {
-    fill: ${props => props.theme.textColor};
+    fill: ${(props) => props.theme.textColor};
     width: 108px;
     height: auto;
     animation: ${faded} 1.5s ease-in-out infinite;
   }
-`
+`;
 
-const MainSpinner = () => {
+const MainSpinner = ({ title }) => {
   return (
     <SpinnerContainer>
-      <LogoSVG />
+      {/* <LogoSVG /> */}
+      {title}
     </SpinnerContainer>
   );
-}
+};
 
 export default MainSpinner;

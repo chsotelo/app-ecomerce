@@ -19,7 +19,6 @@ import { TextBodyLargeStyled } from './../product/styles/sMainProduct';
 
 const MainAddProducts = () => {
   const firestore = useFirestore();
-  console.log(firestore);
   const storage = useStorage();
   const { register, handleSubmit, errors } = useForm();
   const [imageOfProduct, setImageOfProduct] = useState(null);

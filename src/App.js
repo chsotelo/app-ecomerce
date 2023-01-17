@@ -18,6 +18,8 @@ import ListSecondary from './pages/objects/ListSecondary';
 import ExternalLayoutRoute from './components/layouts/ExternalLayoutRoute';
 import AddProducts from './pages/AddProducts';
 import Purchases from './pages/Purchases';
+import firebase from 'firebase/app';
+import MainSpinner from './components/spinner/MainSpinner';
 
 const AppContext = React.createContext();
 const { Provider, Consumer } = AppContext;
@@ -30,6 +32,36 @@ export default function App() {
   const [subTotalPrice, setSubTotalPrice] = useState(0);
   const [discount, setDiscount] = useState(0);
   const [dataOfCard, setDataOfCard] = useState(null);
+
+  const [currentUser, setCurrentUser] = useState(firebase.auth().currentUser || null);
+  const [dataOfUser, setDataOfUser] = useState(null);
+  const [loading, setLoading] = useState({ status: true, title: null });
+
+  const recoverDataOfUser = async (db, user) => {
+    const userRef = db.collection('users').doc(user.uid);
+    const doc = await userRef.get();
+    if (!doc.exists) {
+      console.log('Usuario no encontrado!');
+    } else {
+      return doc.data();
+    }
+  };
+
+  useEffect(() => {
+    !currentUser &&
+      firebase.auth().onAuthStateChanged(async (user) => {
+        setLoading({ status: true, title: null });
+        user ? setCurrentUser(user) : setCurrentUser(null);
+        if (user) {
+          const recoverUser = await recoverDataOfUser(firebase.firestore(), user);
+          console.log('Recover', recoverUser);
+          setDataOfUser(recoverUser);
+        }
+        setLoading({ status: false, title: null });
+      });
+    return () => {};
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [firebase.auth(), currentUser, dataOfUser]);
 
   const productValue = {
     listOfWish,
@@ -46,7 +78,16 @@ export default function App() {
     setDiscount,
     dataOfCard,
     setDataOfCard,
+    currentUser,
+    setCurrentUser,
+    dataOfUser,
+    setDataOfUser,
+    loading,
+    setLoading,
   };
+  if ((loading.status && !currentUser) || loading.status) {
+    return <MainSpinner title={loading.title ?? 'CARGANDO DATOS!'} />;
+  }
 
   return (
     <ThemeProvider theme={theme}>
@@ -69,7 +110,9 @@ export default function App() {
                 <Route exact path={'/shipping/add-credit-card'} component={AddCreditCard} />
               </>
             )}
-            <Route exact path={'/addProducts'} component={AddProducts} />
+            {dataOfUser?.typeOfUser === 'admin' && (
+              <Route exact path={'/addProducts'} component={AddProducts} />
+            )}
             <Route exact path={'/purchases'} component={Purchases} />
             <Redirect from="*" to="/404" />
           </Switch>
