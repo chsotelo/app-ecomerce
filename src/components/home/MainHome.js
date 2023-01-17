@@ -34,24 +34,28 @@ const MainHome = () => {
   const [listOfProducts, setListOfProducts] = useStateIfMounted([]);
   const [listOfMarkProducts, setListOfMarkProducts] = useStateIfMounted([]);
 
-  // useEffect(async () => {
-  //   let disponibleProducts = await recoverProducts(firestore, null, 10000, null);
-  //   if (disponibleProducts && listOfProducts.length === 0) {
-  //     disponibleProducts.map((product) => {
-  //       if (!listOfProducts.includes(product)) {
-  //         setListOfProducts((prevState) => [...prevState, product]);
-  //       }
-  //     });
-  //   }
-  //   let markDisponibleProducts = await recoverProducts(firestore, null, null, 'Beats');
-  //   if (markDisponibleProducts && listOfMarkProducts.length === 0) {
-  //     markDisponibleProducts.map((product) => {
-  //       if (!listOfMarkProducts.includes(product)) {
-  //         setListOfMarkProducts((prevState) => [...prevState, product]);
-  //       }
-  //     });
-  //   }
-  // }, []);
+  const functionRecoversProducts = async () => {
+    let disponibleProducts = await recoverProducts(firestore, null, 10000, null);
+    if (disponibleProducts && listOfProducts.length === 0) {
+      disponibleProducts.map((product) => {
+        if (!listOfProducts.includes(product)) {
+          setListOfProducts((prevState) => [...prevState, product]);
+        }
+      });
+    }
+    let markDisponibleProducts = await recoverProducts(firestore, null, null, 'Beats');
+    if (markDisponibleProducts && listOfMarkProducts.length === 0) {
+      markDisponibleProducts.map((product) => {
+        if (!listOfMarkProducts.includes(product)) {
+          setListOfMarkProducts((prevState) => [...prevState, product]);
+        }
+      });
+    }
+  };
+
+  useEffect(() => {
+    functionRecoversProducts();
+  }, []);
 
   const handleSeeMoreTopProduct = async (e) => {
     e.preventDefault();

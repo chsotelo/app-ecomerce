@@ -41,11 +41,15 @@ const MainProduct = () => {
   const nameProductRoute = match.params.id.concat(location.hash);
   const [productData, loading, error] = useMatchRouteProductData('products', nameProductRoute);
 
-  useEffect(async () => {
+  const recoverDataProduct = async () => {
     if (productData && productData.length !== 0) {
       setProductInfo(productData[0]);
       setOtherSimilarProducts(await recoverProducts(firestore, productData[0].category));
     }
+  };
+
+  useEffect(() => {
+    recoverDataProduct();
   }, [productData, listOfWish]);
 
   if (loading) return <Spinner />;

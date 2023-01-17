@@ -55,6 +55,8 @@ export default function App() {
         <ExternalLayout>
           <Switch>
             <Route exact path={'/'} component={Home} />
+            <Route exact path={'/login'} component={Home} />
+            <Route exact path={'/logout'} component={Home} />
             <Route exact path={'/my-cart'} component={ShoppingCart} />
             <Route exact path={'/category/:category'} component={ProductsCategory} />
             <Route exact path={'/product/:id'} component={Product} />

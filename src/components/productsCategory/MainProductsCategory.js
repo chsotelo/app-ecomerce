@@ -57,22 +57,25 @@ const MainProductsCategory = () => {
     }
   };
 
-  // useEffect(async () => {
-  //   let disponibleProducts = await recoverProducts(
-  //     firestore,
-  //     renderSwitchProducts(nameCategoryRoute),
-  //     null,
-  //     18,
-  //   );
-  //   setListOfProducts([]);
-  //   if (disponibleProducts) {
-  //     disponibleProducts.map((product) => {
-  //       if (!listOfProducts.includes(product)) {
-  //         setListOfProducts((prevState) => [...prevState, product]);
-  //       }
-  //     });
-  //   }
-  // }, [nameCategoryRoute]);
+  const recoverDataProducts = async () => {
+    let disponibleProducts = await recoverProducts(
+      firestore,
+      renderSwitchProducts(nameCategoryRoute),
+      null,
+      18,
+    );
+    setListOfProducts([]);
+    if (disponibleProducts) {
+      disponibleProducts.map((product) => {
+        if (!listOfProducts.includes(product)) {
+          setListOfProducts((prevState) => [...prevState, product]);
+        }
+      });
+    }
+  };
+  useEffect(() => {
+    recoverDataProducts();
+  }, [nameCategoryRoute]);
 
   return (
     <main>
