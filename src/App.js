@@ -1,3 +1,4 @@
+/* eslint-disable no-unreachable */
 import React, { useContext, useState, useEffect } from 'react';
 import { Switch, Route, Redirect } from 'react-router-dom';
 import { ThemeProvider } from 'styled-components';
@@ -20,6 +21,7 @@ import AddProducts from './pages/AddProducts';
 import Purchases from './pages/Purchases';
 import firebase from 'firebase/app';
 import MainSpinner from './components/spinner/MainSpinner';
+import Swal from 'sweetalert2';
 
 const AppContext = React.createContext();
 const { Provider, Consumer } = AppContext;
@@ -56,12 +58,47 @@ export default function App() {
           const recoverUser = await recoverDataOfUser(firebase.firestore(), user);
           console.log('Recover', recoverUser);
           setDataOfUser(recoverUser);
+          recoverUser?.card && setListOfWish(recoverUser.card);
+          const Toast = Swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
+          });
+          Toast.fire({
+            icon: 'success',
+            title: 'Sesion iniciada correctamente!',
+          });
         }
         setLoading({ status: false, title: null });
       });
     return () => {};
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [firebase.auth(), currentUser, dataOfUser]);
+
+  useEffect(() => {
+    if (dataOfUser) {
+      const db = firebase.firestore();
+      const userRef = db.collection('users').doc(dataOfUser.uid);
+      userRef
+        .update(
+          {
+            card: listOfWish,
+          },
+          { merge: true },
+        )
+        .then(() => {
+          console.log('Document successfully updated!');
+        })
+        .catch((error) => {
+          // The document probably doesn't exist.
+          console.error('Error updating document: ', error);
+        });
+    }
+    return () => {};
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [listOfWish]);
 
   const productValue = {
     listOfWish,
@@ -95,11 +132,15 @@ export default function App() {
         <GlobalStyles />
         <ExternalLayout>
           <Switch>
+            {dataOfUser?.typeOfUser === 'admin' && (
+              <Route exact path={'/addProducts'} component={AddProducts} />
+            )}
             <Route exact path={'/'} component={Home} />
             <Route exact path={'/login'} component={Home} />
             <Route exact path={'/logout'} component={Home} />
             <Route exact path={'/my-cart'} component={ShoppingCart} />
             <Route exact path={'/category/:category'} component={ProductsCategory} />
+
             <Route exact path={'/product/:id'} component={Product} />
             {listOfWish.length !== 0 && (
               <>
@@ -110,9 +151,7 @@ export default function App() {
                 <Route exact path={'/shipping/add-credit-card'} component={AddCreditCard} />
               </>
             )}
-            {dataOfUser?.typeOfUser === 'admin' && (
-              <Route exact path={'/addProducts'} component={AddProducts} />
-            )}
+
             <Route exact path={'/purchases'} component={Purchases} />
             <Redirect from="*" to="/404" />
           </Switch>

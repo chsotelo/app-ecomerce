@@ -60,8 +60,16 @@ const MainProduct = () => {
   const handleAddToCar = (e) => {
     const product = productInfo;
     product.quantity = quantity;
+    //si el producto ya existe en el carrito, se reemplaza por el nuevo
+    const index = listOfWish.findIndex((item) => item.uid === product.uid);
+    if (index !== -1) {
+      listOfWish.splice(index, 1, product);
+      setListOfWish([...listOfWish]);
+      return;
+    }
     setListOfWish([...listOfWish, product]);
   };
+  // // setListOfWish([...listOfWish, product]);
 
   const handleChangeQuantity = (e) => {
     setQuantity(parseInt(e.target.value));

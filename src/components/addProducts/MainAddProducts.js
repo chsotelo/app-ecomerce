@@ -16,6 +16,7 @@ import {
   Option,
 } from './../../styles/generalComponents';
 import { TextBodyLargeStyled } from './../product/styles/sMainProduct';
+import Swal from 'sweetalert2';
 
 const MainAddProducts = () => {
   const firestore = useFirestore();
@@ -28,6 +29,22 @@ const MainAddProducts = () => {
       await sendProducts(storage, firestore, data, imageOfProduct);
       document.getElementById('productSendForm').reset();
       setImageOfProduct(null);
+      const Toast = Swal.mixin({
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        timer: 2000,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+          toast.addEventListener('mouseenter', Swal.stopTimer);
+          toast.addEventListener('mouseleave', Swal.resumeTimer);
+        },
+      });
+
+      Toast.fire({
+        icon: 'success',
+        title: 'Guardado Correctamente!',
+      });
     }
   };
 
@@ -96,9 +113,9 @@ const MainAddProducts = () => {
               <Option value="Auriculares">Auriculares</Option>
               <Option value="Altavoz">Altavoz</Option>
               <Option value="Reproductor">Reproductor de sonido</Option>
-              <Option value="Profesional">Laptops</Option>
-              <Option value="Profesional">Controladores</Option>
-              <Option value="Profesional">Smarthphones</Option>
+              <Option value="Laptop">Laptops</Option>
+              <Option value="Controlador">Controladores</Option>
+              <Option value="Smarthphone">Smarthphones</Option>
               <Option value="Profesional">Profesional</Option>
             </Select>
           </InputContainer>

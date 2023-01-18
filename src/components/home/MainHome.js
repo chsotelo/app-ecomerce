@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import Section from './../general/Section';
 import CategoriesCard from './CategoriesCard';
 import Article from './../general/Article';
@@ -36,16 +36,16 @@ const MainHome = () => {
 
   const functionRecoversProducts = async () => {
     let disponibleProducts = await recoverProducts(firestore, null, 10000, null);
-    console.log('disponibleProducts', disponibleProducts);
-    if (disponibleProducts && listOfProducts.length === 0) {
+    let markDisponibleProducts = await recoverProducts(firestore, null, null, 'Beats');
+
+    if (disponibleProducts) {
       disponibleProducts.map((product) => {
         if (!listOfProducts.includes(product)) {
-          console.log('product', product);
           setListOfProducts((prevState) => [...prevState, product]);
         }
       });
     }
-    let markDisponibleProducts = await recoverProducts(firestore, null, null, 'Beats');
+
     if (markDisponibleProducts && listOfMarkProducts.length === 0) {
       markDisponibleProducts.map((product) => {
         if (!listOfMarkProducts.includes(product)) {
@@ -55,9 +55,9 @@ const MainHome = () => {
     }
   };
 
-  useEffect(() => {
-    listOfProducts.length === 0 && functionRecoversProducts();
-  }, []);
+  listOfProducts.length === 0 && functionRecoversProducts();
+  // useEffect(() => {}, []);
+  // console.log('render');
 
   //TODO para ver mas productos
   // const handleSeeMoreTopProduct = async (e) => {
@@ -110,13 +110,13 @@ const MainHome = () => {
         </ListArticlesContainer>
         {/* <LinkStyled onClick={handleSeeMoreTopProduct}>Vér más productos</LinkStyled> */}
       </Section>
-      <SectionDelivery categorySecond margin="auto">
+      {/* <SectionDelivery categorySecond margin="auto">
         <DeliveryTruckSVG />
         <div>
           <SubtitleTextSmall as="h3">Envios gratis a todo el Perú</SubtitleTextSmall>
           <TextBodySmall>Estes donde estes. Tu compra siempre llegará.</TextBodySmall>
         </div>
-      </SectionDelivery>
+      </SectionDelivery> */}
       <Section titleSection="Productos Beats">
         <ListArticlesContainer>
           {listOfMarkProducts.map((product) => {

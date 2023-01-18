@@ -18,11 +18,6 @@ let listOptionsMenu = [
     link: '/',
   },
   {
-    id: 'shoppingCart',
-    icon: <ShoppingCartSVG className="icon" />,
-    link: '/my-cart',
-  },
-  {
     id: 'purchase',
     icon: <PurchaseSVG className="icon" />,
     link: '/purchases',
@@ -32,10 +27,15 @@ let listOptionsMenu = [
     icon: <ProfileSVG className="icon" />,
     link: '/login',
   },
+  {
+    id: 'shoppingCart',
+    icon: <ShoppingCartSVG className="icon" />,
+    link: '/my-cart',
+  },
 ];
 
 const Header = () => {
-  const { dataOfUser } = useContext(AppContext);
+  const { dataOfUser, listOfWish } = useContext(AppContext);
 
   if (dataOfUser?.typeOfUser === 'admin') {
     //agregar un nuevo elemento al array en el inicio si no existe
@@ -60,6 +60,7 @@ const Header = () => {
               {listOptionsMenu.map((option) => (
                 <Options key={option.id} {...option} />
               ))}
+              <span className="counnter-cart">{listOfWish.length}</span>
             </MenuDesktopContainer>
           </FlexContainer>
         </Wrapper>
