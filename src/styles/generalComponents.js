@@ -276,13 +276,28 @@ export const DetailsProduct = styled.div`
 `;
 
 export const InputContainer = styled.fieldset`
-  margin: 0 0 20px 0;
+  margin: 20px 0 20px 0;
   border: none;
 
   label {
     display: block;
     font-size: 0.875em;
     margin: 0 0 10px 0;
+  }
+`;
+export const InputContainerForEmail = styled.fieldset`
+  margin: 0 0 20px 0;
+  border: none;
+  width: 100% !important;
+
+  label {
+    display: block;
+    width: 100%;
+    font-size: 0.875em;
+    margin: 0 0 10px 0;
+  }
+  input {
+    width: 100% !important;
   }
 `;
 

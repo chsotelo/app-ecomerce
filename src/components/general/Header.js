@@ -43,7 +43,7 @@ const Header = () => {
       listOptionsMenu.unshift({
         id: 'addProducts',
         icon: <AdminSVG className="icon" />,
-        link: '/addProducts',
+        link: '/admin-route',
       });
     }
   }

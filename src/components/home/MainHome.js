@@ -5,24 +5,24 @@ import CategoriesCard from './CategoriesCard';
 import Article from './../general/Article';
 import listCategories from './categories';
 import { useStateIfMounted } from 'use-state-if-mounted';
-import {
-  SubtitleTextSmall,
-  TextBodySmall,
-  TitleText,
-  TitleContainer,
-} from './../../styles/generalComponents';
+// import {
+//   SubtitleTextSmall,
+//   TextBodySmall,
+//   TitleText,
+//   TitleContainer,
+// } from './../../styles/generalComponents';
 import { ListArticlesContainer } from './../../styles/generalComponents';
 import {
   CoverPageContainer,
   ListCategoriesContainer,
-  LinkStyled,
-  SectionDelivery,
-  SectionMetodsPay,
+  // LinkStyled,
+  // SectionDelivery,
+  // SectionMetodsPay,
 } from './styles/sMainHome';
-import { ReactComponent as DeliveryTruckSVG } from './../../icons/others/deliveryTruck.svg';
-import { ReactComponent as VisaSVG } from './../../icons/othersLogos/visa.svg';
-import { ReactComponent as MastercardSVG } from './../../icons/othersLogos/mastercard.svg';
-import { ReactComponent as AmericanExpressSVG } from './../../icons/othersLogos/americanExpress.svg';
+// import { ReactComponent as DeliveryTruckSVG } from './../../icons/others/deliveryTruck.svg';
+// import { ReactComponent as VisaSVG } from './../../icons/othersLogos/visa.svg';
+// import { ReactComponent as MastercardSVG } from './../../icons/othersLogos/mastercard.svg';
+// import { ReactComponent as AmericanExpressSVG } from './../../icons/othersLogos/americanExpress.svg';
 
 import { useFirestore } from 'reactfire';
 import { recoverProducts } from './algorithms/recoverProducts';
@@ -136,7 +136,7 @@ const MainHome = () => {
           })}
         </ListArticlesContainer>
       </Section>
-      <SectionMetodsPay categorySecond margin="auto">
+      {/* <SectionMetodsPay categorySecond margin="auto">
         <TitleContainer>
           <TitleText>Métodos de pago</TitleText>
         </TitleContainer>
@@ -145,7 +145,7 @@ const MainHome = () => {
           <MastercardSVG />
           <AmericanExpressSVG />
         </div>
-      </SectionMetodsPay>
+      </SectionMetodsPay> */}
     </main>
   );
 };

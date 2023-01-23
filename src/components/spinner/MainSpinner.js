@@ -37,7 +37,7 @@ const SpinnerContainer = styled.div`
 const MainSpinner = ({ title }) => {
   return (
     <SpinnerContainer>
-      {/* <LogoSVG /> */}
+      <LogoSVG />
       {title}
     </SpinnerContainer>
   );

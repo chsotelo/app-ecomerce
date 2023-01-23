@@ -3,7 +3,6 @@ import Swal from 'sweetalert2';
 import { NavLinkStyled } from './styles/sNavbar';
 import firebase from 'firebase/app';
 import { AppContext } from '../../../App';
-// import 'firebase/auth';
 
 const Options = ({ icon, link, id }) => {
   const { setLoading, setCurrentUser, dataOfUser, setDataOfUser } = useContext(AppContext);
