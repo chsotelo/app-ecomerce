@@ -1,13 +1,12 @@
 import React from 'react';
-import MainAddProducts from './../components/addProducts/MainAddProducts'
+import MainAddProducts from '../components/admin/addProducts/MainAddProducts';
 
 const AddProducts = () => {
+  return (
+    <>
+      <MainAddProducts />
+    </>
+  );
+};
 
-    return(
-        <>
-            <MainAddProducts/>
-        </>
-    )
-}
-
-export default AddProducts
+export default AddProducts;

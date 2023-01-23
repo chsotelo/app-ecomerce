@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { sendProducts } from './algorithms/sendProduct';
-import { Wrapper } from './../../styles/generalStyles';
+import { Wrapper } from '../../../styles/generalStyles';
 import { useFirestore, useStorage } from 'reactfire';
 import {
   Input,
@@ -14,10 +14,10 @@ import {
   ButtonContainer,
   Select,
   Option,
-} from './../../styles/generalComponents';
-import { TextBodyLargeStyled } from './../product/styles/sMainProduct';
+} from '../../../styles/generalComponents';
+import { TextBodyLargeStyled } from '../../product/styles/sMainProduct';
 import Swal from 'sweetalert2';
-import Spinner from '../spinner/Spinner';
+import Spinner from '../../spinner/Spinner';
 
 const MainAddProducts = () => {
   const firestore = useFirestore();

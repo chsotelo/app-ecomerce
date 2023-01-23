@@ -8,7 +8,6 @@ import { TitleText, TitleContainer, TextBodySmall } from './../../styles/general
 
 const MainShoppingCart = () => {
   const { listOfWish } = useContext(AppContext);
-  console.log(listOfWish);
   useEffect(() => {}, [listOfWish]);
   return (
     <main>

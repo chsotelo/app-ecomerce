@@ -14,9 +14,9 @@ import ShippingCreditCard from './pages/ShippingCreditCard';
 import ShippingBuy from './pages/ShippingBuy';
 import AddAdress from './pages/AddAdress';
 import AddCreditCard from './pages/AddCreditCard';
-import ListOfRoutes from './pages/objects/ListOfRoutes';
-import ListSecondary from './pages/objects/ListSecondary';
-import ExternalLayoutRoute from './components/layouts/ExternalLayoutRoute';
+// import ListOfRoutes from './pages/objects/ListOfRoutes';
+// import ListSecondary from './pages/objects/ListSecondary';
+// import ExternalLayoutRoute from './components/layouts/ExternalLayoutRoute';
 import AddProducts from './pages/AddProducts';
 import Purchases from './pages/Purchases';
 import firebase from 'firebase/app';
@@ -25,6 +25,7 @@ import Swal from 'sweetalert2';
 import NotFound from './components/notFound/MainNotFound';
 import ProductsEdit from './pages/ProductsEdit';
 import Admin from './pages/AdminPage';
+import EditProductSelected from './pages/EditProductSelected';
 
 const AppContext = React.createContext();
 const { Provider, Consumer } = AppContext;
@@ -42,6 +43,7 @@ export default function App() {
   const [dataOfUser, setDataOfUser] = useState(null);
   const [loading, setLoading] = useState({ status: true, title: null });
   const [allProdutsLocal, setAllProductsLocal] = useState(null);
+  const [productSelectedForEdit, setProductSelectedForEdit] = useState(null);
   const recoverDataOfUser = async (db, user) => {
     const userRef = db.collection('users').doc(user.uid);
     const doc = await userRef.get();
@@ -83,7 +85,6 @@ export default function App() {
         user ? setCurrentUser(user) : setCurrentUser(null);
         if (user) {
           const recoverUser = await recoverDataOfUser(firebase.firestore(), user);
-          console.log('Recover', recoverUser);
           setDataOfUser(recoverUser);
           setAddressOfUser(recoverUser?.address ?? null);
           if (dataOfUser) {
@@ -146,6 +147,8 @@ export default function App() {
     setLoading,
     allProdutsLocal,
     setAllProductsLocal,
+    productSelectedForEdit,
+    setProductSelectedForEdit,
   };
   if ((loading.status && !currentUser) || loading.status) {
     return <MainSpinner title={loading.title ?? 'CARGANDO DATOS!'} />;
@@ -170,6 +173,7 @@ export default function App() {
                 <Route exact path={'/admin-route'} component={Admin} />
                 <Route exact path={'/addProducts'} component={AddProducts} />
                 <Route exact path={'/editProducts'} component={ProductsEdit} />
+                <Route exact path={'/editProductSelected'} component={EditProductSelected} />
               </>
             )}
 

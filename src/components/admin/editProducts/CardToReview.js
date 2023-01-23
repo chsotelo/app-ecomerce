@@ -1,8 +1,12 @@
 import { useContext } from 'react';
-import { useFirestore } from 'reactfire';
+import { Link } from 'react-router-dom';
+import {
+  useFirestore,
+  // useStorage
+} from 'reactfire';
 import Swal from 'sweetalert2';
-import { AppContext } from '../../App';
-import { Button } from '../../styles/generalComponents';
+import { AppContext } from '../../../App';
+import { Button } from '../../../styles/generalComponents';
 import {
   ButtonsContainer,
   ContainerCard,
@@ -12,7 +16,6 @@ import {
 } from './styles/sCardToReview';
 
 const onDeleteProduct = async ({ db, uid, setAllProductsLocal, allProdutsLocal }) => {
-  console.log('uid', uid);
   try {
     Swal.fire({
       title: '¿Estas seguro de eliminar este producto?',
@@ -41,6 +44,11 @@ const onDeleteProduct = async ({ db, uid, setAllProductsLocal, allProdutsLocal }
   }
 };
 
+const onEditProduct = ({ productSelected, setProductSelectedForEdit, e }) => {
+  setProductSelectedForEdit(null);
+  setProductSelectedForEdit(productSelected);
+};
+
 export const CardToReview = ({
   title,
   description,
@@ -52,9 +60,17 @@ export const CardToReview = ({
   stock,
   discount,
   weight,
+  productSelected,
 }) => {
   const db = useFirestore();
-  const { allProdutsLocal, setAllProductsLocal } = useContext(AppContext);
+
+  // const storage = useStorage();
+  const {
+    allProdutsLocal,
+    setAllProductsLocal,
+    // productSelectedForEdit,
+    setProductSelectedForEdit,
+  } = useContext(AppContext);
   return (
     <ContainerCard>
       <ImageCard>
@@ -85,7 +101,16 @@ export const CardToReview = ({
           </p>
         </DetailsContainer>
         <ButtonsContainer>
-          <Button secondary> Editar</Button>
+          <Link to={'/editProductSelected'}>
+            <Button
+              secondary
+              onClick={(e) => {
+                onEditProduct({ productSelected, e, setProductSelectedForEdit });
+              }}
+            >
+              Editar
+            </Button>
+          </Link>
           <Button
             secondary
             onClick={() => {

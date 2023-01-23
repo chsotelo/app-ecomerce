@@ -1,5 +1,5 @@
 import React from 'react';
-import { MainEditProducts } from '../components/editProducts/MainEditProducts';
+import { MainEditProducts } from '../components/admin/editProducts/MainEditProducts';
 
 const ProductsEdit = () => {
   return (

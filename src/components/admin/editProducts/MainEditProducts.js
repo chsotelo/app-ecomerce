@@ -2,9 +2,9 @@ import { useContext } from 'react';
 import { useEffect } from 'react';
 import { useState } from 'react';
 import { useFirestore } from 'reactfire';
-import { AppContext } from '../../App';
-import { InputContainer, Option, Select } from '../../styles/generalComponents';
-import { Wrapper } from '../../styles/generalStyles';
+import { AppContext } from '../../../App';
+import { InputContainer, Option, Select } from '../../../styles/generalComponents';
+import { Wrapper } from '../../../styles/generalStyles';
 import { CardToReview } from './CardToReview';
 
 export const MainEditProducts = () => {
@@ -75,7 +75,7 @@ export const MainEditProducts = () => {
         </InputContainer>
 
         {products?.map((product, index) => {
-          return <CardToReview key={index} {...product} />;
+          return <CardToReview key={index} productSelected={product} {...product} />;
         })}
       </Wrapper>
     </main>
