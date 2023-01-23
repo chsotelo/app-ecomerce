@@ -5,6 +5,7 @@ import { useFirestore } from 'reactfire';
 import { AppContext } from '../../../App';
 import { InputContainer, Option, Select } from '../../../styles/generalComponents';
 import { Wrapper } from '../../../styles/generalStyles';
+import Spinner from '../../spinner/Spinner';
 import { CardToReview } from './CardToReview';
 
 export const MainEditProducts = () => {
@@ -49,6 +50,8 @@ export const MainEditProducts = () => {
       }
     }
   }, [allProdutsLocal, productsFiltered]);
+
+  localLoading && <Spinner title={'cargando productos ...'} />;
 
   return (
     <main>
