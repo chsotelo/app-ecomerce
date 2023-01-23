@@ -1,28 +1,28 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import Section from './../general/Section';
 import CategoriesCard from './CategoriesCard';
 import Article from './../general/Article';
 import listCategories from './categories';
 import { useStateIfMounted } from 'use-state-if-mounted';
-import {
-  SubtitleTextSmall,
-  TextBodySmall,
-  TitleText,
-  TitleContainer,
-} from './../../styles/generalComponents';
+// import {
+//   SubtitleTextSmall,
+//   TextBodySmall,
+//   TitleText,
+//   TitleContainer,
+// } from './../../styles/generalComponents';
 import { ListArticlesContainer } from './../../styles/generalComponents';
 import {
   CoverPageContainer,
   ListCategoriesContainer,
-  LinkStyled,
-  SectionDelivery,
-  SectionMetodsPay,
+  // LinkStyled,
+  // SectionDelivery,
+  // SectionMetodsPay,
 } from './styles/sMainHome';
-import { ReactComponent as DeliveryTruckSVG } from './../../icons/others/deliveryTruck.svg';
-import { ReactComponent as VisaSVG } from './../../icons/othersLogos/visa.svg';
-import { ReactComponent as MastercardSVG } from './../../icons/othersLogos/mastercard.svg';
-import { ReactComponent as AmericanExpressSVG } from './../../icons/othersLogos/americanExpress.svg';
+// import { ReactComponent as DeliveryTruckSVG } from './../../icons/others/deliveryTruck.svg';
+// import { ReactComponent as VisaSVG } from './../../icons/othersLogos/visa.svg';
+// import { ReactComponent as MastercardSVG } from './../../icons/othersLogos/mastercard.svg';
+// import { ReactComponent as AmericanExpressSVG } from './../../icons/othersLogos/americanExpress.svg';
 
 import { useFirestore } from 'reactfire';
 import { recoverProducts } from './algorithms/recoverProducts';
@@ -34,42 +34,49 @@ const MainHome = () => {
   const [listOfProducts, setListOfProducts] = useStateIfMounted([]);
   const [listOfMarkProducts, setListOfMarkProducts] = useStateIfMounted([]);
 
-  // useEffect(async () => {
-  //   let disponibleProducts = await recoverProducts(firestore, null, 10000, null);
-  //   if (disponibleProducts && listOfProducts.length === 0) {
-  //     disponibleProducts.map((product) => {
-  //       if (!listOfProducts.includes(product)) {
-  //         setListOfProducts((prevState) => [...prevState, product]);
-  //       }
-  //     });
-  //   }
-  //   let markDisponibleProducts = await recoverProducts(firestore, null, null, 'Beats');
-  //   if (markDisponibleProducts && listOfMarkProducts.length === 0) {
-  //     markDisponibleProducts.map((product) => {
-  //       if (!listOfMarkProducts.includes(product)) {
-  //         setListOfMarkProducts((prevState) => [...prevState, product]);
-  //       }
-  //     });
-  //   }
-  // }, []);
+  const functionRecoversProducts = async () => {
+    let disponibleProducts = await recoverProducts(firestore, null, 10000, null);
+    let markDisponibleProducts = await recoverProducts(firestore, null, null, 'Beats');
 
-  const handleSeeMoreTopProduct = async (e) => {
-    e.preventDefault();
-    var price = 1000;
-    listOfProducts.map((product) => {
-      if (product.price < price) {
-        price = product.price - 1;
-      }
-    });
-    let newDisponibleProducts = await recoverProducts(firestore, null, price, null);
-    if (newDisponibleProducts) {
-      newDisponibleProducts.map((product) => {
+    if (disponibleProducts) {
+      disponibleProducts.map((product) => {
         if (!listOfProducts.includes(product)) {
           setListOfProducts((prevState) => [...prevState, product]);
         }
       });
     }
+
+    if (markDisponibleProducts && listOfMarkProducts.length === 0) {
+      markDisponibleProducts.map((product) => {
+        if (!listOfMarkProducts.includes(product)) {
+          setListOfMarkProducts((prevState) => [...prevState, product]);
+        }
+      });
+    }
   };
+
+  listOfProducts.length === 0 && functionRecoversProducts();
+  // useEffect(() => {}, []);
+  // console.log('render');
+
+  //TODO para ver mas productos
+  // const handleSeeMoreTopProduct = async (e) => {
+  //   e.preventDefault();
+  //   var price = 1000;
+  //   listOfProducts.map((product) => {
+  //     if (product.price < price) {
+  //       price = product.price - 1;
+  //     }
+  //   });
+  //   let newDisponibleProducts = await recoverProducts(firestore, null, price, null);
+  //   if (newDisponibleProducts) {
+  //     newDisponibleProducts.map((product) => {
+  //       if (!listOfProducts.includes(product)) {
+  //         setListOfProducts((prevState) => [...prevState, product]);
+  //       }
+  //     });
+  //   }
+  // };
 
   return (
     <main>
@@ -103,13 +110,13 @@ const MainHome = () => {
         </ListArticlesContainer>
         {/* <LinkStyled onClick={handleSeeMoreTopProduct}>Vér más productos</LinkStyled> */}
       </Section>
-      <SectionDelivery categorySecond margin="auto">
+      {/* <SectionDelivery categorySecond margin="auto">
         <DeliveryTruckSVG />
         <div>
           <SubtitleTextSmall as="h3">Envios gratis a todo el Perú</SubtitleTextSmall>
           <TextBodySmall>Estes donde estes. Tu compra siempre llegará.</TextBodySmall>
         </div>
-      </SectionDelivery>
+      </SectionDelivery> */}
       <Section titleSection="Productos Beats">
         <ListArticlesContainer>
           {listOfMarkProducts.map((product) => {
@@ -129,7 +136,7 @@ const MainHome = () => {
           })}
         </ListArticlesContainer>
       </Section>
-      <SectionMetodsPay categorySecond margin="auto">
+      {/* <SectionMetodsPay categorySecond margin="auto">
         <TitleContainer>
           <TitleText>Métodos de pago</TitleText>
         </TitleContainer>
@@ -138,7 +145,7 @@ const MainHome = () => {
           <MastercardSVG />
           <AmericanExpressSVG />
         </div>
-      </SectionMetodsPay>
+      </SectionMetodsPay> */}
     </main>
   );
 };

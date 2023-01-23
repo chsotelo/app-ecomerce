@@ -41,11 +41,15 @@ const MainProduct = () => {
   const nameProductRoute = match.params.id.concat(location.hash);
   const [productData, loading, error] = useMatchRouteProductData('products', nameProductRoute);
 
-  useEffect(async () => {
+  const recoverDataProduct = async () => {
     if (productData && productData.length !== 0) {
       setProductInfo(productData[0]);
       setOtherSimilarProducts(await recoverProducts(firestore, productData[0].category));
     }
+  };
+
+  useEffect(() => {
+    recoverDataProduct();
   }, [productData, listOfWish]);
 
   if (loading) return <Spinner />;
@@ -56,8 +60,16 @@ const MainProduct = () => {
   const handleAddToCar = (e) => {
     const product = productInfo;
     product.quantity = quantity;
+    //si el producto ya existe en el carrito, se reemplaza por el nuevo
+    const index = listOfWish.findIndex((item) => item.uid === product.uid);
+    if (index !== -1) {
+      listOfWish.splice(index, 1, product);
+      setListOfWish([...listOfWish]);
+      return;
+    }
     setListOfWish([...listOfWish, product]);
   };
+  // // setListOfWish([...listOfWish, product]);
 
   const handleChangeQuantity = (e) => {
     setQuantity(parseInt(e.target.value));
