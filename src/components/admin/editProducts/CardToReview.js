@@ -1,12 +1,14 @@
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import { Link } from 'react-router-dom';
 import {
   useFirestore,
+  useStorage,
   // useStorage
 } from 'reactfire';
 import Swal from 'sweetalert2';
 import { AppContext } from '../../../App';
 import { Button } from '../../../styles/generalComponents';
+import Spinner from '../../spinner/Spinner';
 import {
   ButtonsContainer,
   ContainerCard,
@@ -15,7 +17,14 @@ import {
   TextCardContainer,
 } from './styles/sCardToReview';
 
-const onDeleteProduct = async ({ db, uid, setAllProductsLocal, allProdutsLocal }) => {
+const onDeleteProduct = async ({
+  db,
+  uid,
+  setAllProductsLocal,
+  allProdutsLocal,
+  storage,
+  setLocalLoading,
+}) => {
   try {
     Swal.fire({
       title: '¿Estas seguro de eliminar este producto?',
@@ -23,6 +32,7 @@ const onDeleteProduct = async ({ db, uid, setAllProductsLocal, allProdutsLocal }
     }).then(async (result) => {
       /* Read more about isConfirmed, isDenied below */
       if (result.isConfirmed) {
+        setLocalLoading(true);
         await db
           .collection('products')
           .doc(uid)
@@ -32,15 +42,22 @@ const onDeleteProduct = async ({ db, uid, setAllProductsLocal, allProdutsLocal }
             const newProducts = allProdutsLocal.filter((product) => product.uid !== uid);
             setAllProductsLocal(newProducts);
           });
+        const storageRef = storage.ref();
+        const desertRef = storageRef.child(`products/product_${uid}.jpeg`);
+        await desertRef.delete().then(() => {
+          console.log('imagen eliminada');
+          setLocalLoading(false);
+        });
 
         Swal.fire('Producto eliminado correctamente', '', 'success');
       } else if (result.isDenied) {
         console.log('no se elimino');
+        setLocalLoading(false);
       }
     });
-    //*TODO: buscar la imagen en storage mediante el url y eliminarla
   } catch (error) {
     console.log(error);
+    setLocalLoading(false);
   }
 };
 
@@ -64,14 +81,19 @@ export const CardToReview = ({
 }) => {
   const db = useFirestore();
 
-  // const storage = useStorage();
+  const storage = useStorage();
   const {
     allProdutsLocal,
     setAllProductsLocal,
     // productSelectedForEdit,
     setProductSelectedForEdit,
   } = useContext(AppContext);
-  return (
+
+  const [localLoading, setLocalLoading] = useState(false);
+
+  return localLoading ? (
+    <Spinner title={'Eliminando producto seleccionado...'} />
+  ) : (
     <ContainerCard>
       <ImageCard>
         <img src={photoUrl} alt={title} loading={'lazy'} />
@@ -114,7 +136,14 @@ export const CardToReview = ({
           <Button
             secondary
             onClick={() => {
-              onDeleteProduct({ uid, db, setAllProductsLocal, allProdutsLocal });
+              onDeleteProduct({
+                uid,
+                db,
+                setAllProductsLocal,
+                allProdutsLocal,
+                storage,
+                setLocalLoading,
+              });
             }}
           >
             Eliminar

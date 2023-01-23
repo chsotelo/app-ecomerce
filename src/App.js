@@ -9,23 +9,13 @@ import Home from './pages/Home';
 import ShoppingCart from './pages/ShoppingCart';
 import ProductsCategory from './pages/ProductsCategory';
 import Product from './pages/Product';
-import ShippingAdress from './pages/ShippingAdress';
-import ShippingCreditCard from './pages/ShippingCreditCard';
-import ShippingBuy from './pages/ShippingBuy';
-import AddAdress from './pages/AddAdress';
-import AddCreditCard from './pages/AddCreditCard';
-// import ListOfRoutes from './pages/objects/ListOfRoutes';
-// import ListSecondary from './pages/objects/ListSecondary';
-// import ExternalLayoutRoute from './components/layouts/ExternalLayoutRoute';
-import AddProducts from './pages/AddProducts';
 import Purchases from './pages/Purchases';
 import firebase from 'firebase/app';
 import MainSpinner from './components/spinner/MainSpinner';
 import Swal from 'sweetalert2';
 import NotFound from './components/notFound/MainNotFound';
-import ProductsEdit from './pages/ProductsEdit';
-import Admin from './pages/AdminPage';
-import EditProductSelected from './pages/EditProductSelected';
+import { RoutesAdmin } from './routes/RoutesAdmin';
+import { RoutesCustomers } from './routes/RoutesCustomers';
 
 const AppContext = React.createContext();
 const { Provider, Consumer } = AppContext;
@@ -165,28 +155,20 @@ export default function App() {
             <Route exact path={'/logout'} component={Home} />
             <Route exact path={'/my-cart'} component={ShoppingCart} />
             <Route exact path={'/category/:category'} component={ProductsCategory} />
-
             <Route exact path={'/product/:id'} component={Product} />
             <Route exact path={'/purchases'} component={Purchases} />
-            {dataOfUser?.typeOfUser === 'admin' && (
-              <>
-                <Route exact path={'/admin-route'} component={Admin} />
-                <Route exact path={'/addProducts'} component={AddProducts} />
-                <Route exact path={'/editProducts'} component={ProductsEdit} />
-                <Route exact path={'/editProductSelected'} component={EditProductSelected} />
-              </>
-            )}
-
-            {listOfWish.length !== 0 && (
-              <>
-                <Route exact path={'/shipping/my-address'} component={ShippingAdress} />
-                <Route exact path={'/shipping/my-credit-card'} component={ShippingCreditCard} />
-                <Route exact path={'/shipping/buy'} component={ShippingBuy} />
-                <Route exact path={'/shipping/add-address'} component={AddAdress} />
-                <Route exact path={'/shipping/add-credit-card'} component={AddCreditCard} />
-              </>
-            )}
-            <Route to="/*" component={NotFound} />
+            <>
+              {listOfWish.length !== 0 ? (
+                <>
+                  <Route exact component={RoutesCustomers} />
+                  <>
+                    {dataOfUser?.typeOfUser === 'admin' && <Route exact component={RoutesAdmin} />}
+                  </>
+                </>
+              ) : (
+                <Route path={'*'} component={NotFound} />
+              )}
+            </>
           </Switch>
         </ExternalLayout>
       </Provider>

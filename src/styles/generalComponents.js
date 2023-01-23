@@ -98,11 +98,13 @@ const InputMixin = css`
 `;
 
 export const Input = styled.input`
+  width: ${(props) => props.width || '100%'};
   height: ${(props) => props.height || '40px'};
   ${InputMixin}
 `;
 
 export const TextArea = styled.textarea`
+  width: 100%;
   height: 250px;
   resize: none;
   ${InputMixin}
