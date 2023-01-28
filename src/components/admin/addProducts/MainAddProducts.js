@@ -19,6 +19,7 @@ import { TextBodyLargeStyled } from '../../product/styles/sMainProduct';
 import Swal from 'sweetalert2';
 import Spinner from '../../spinner/Spinner';
 import { WrapperDuplex } from './style/sMainAddProducts';
+import { handleImageClick } from './algorithms/handleImageClick';
 
 const MainAddProducts = () => {
   const firestore = useFirestore();
@@ -52,16 +53,6 @@ const MainAddProducts = () => {
       });
       setLocalLoading(false);
     }
-  };
-
-  const handleImageClick = (e) => {
-    e.preventDefault();
-    const imageOfProduct = document.getElementById('productImage');
-    imageOfProduct.value = null;
-    e = imageOfProduct.click();
-    imageOfProduct.addEventListener('change', async (e) => {
-      setImageOfProduct(e.target.files[0]);
-    });
   };
 
   return (
@@ -200,7 +191,12 @@ const MainAddProducts = () => {
                 style={{ display: 'none' }}
               />
               <ButtonContainer>
-                <Button secondary small type="button" onClick={handleImageClick}>
+                <Button
+                  secondary
+                  small
+                  type="button"
+                  onClick={(e) => handleImageClick(e, setImageOfProduct)}
+                >
                   Añadir Imagen
                 </Button>
               </ButtonContainer>

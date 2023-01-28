@@ -1,4 +1,8 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, {
+  useContext,
+  // useEffect,
+  useState,
+} from 'react';
 import { useForm } from 'react-hook-form';
 import { updateProduct } from './algorithms/updateProduct';
 import { Wrapper } from '../../../styles/generalStyles';
@@ -7,7 +11,7 @@ import {
   Input,
   InputContainer,
   ErrorMessageInput,
-  TitleContainer,
+  // TitleContainer,
   TextBodyLarge,
   TextArea,
   Button,
@@ -21,6 +25,7 @@ import Spinner from '../../spinner/Spinner';
 import { AppContext } from '../../../App';
 import { MessageContainer, TitleContainerEdit, WrapperDuplex } from './styles/sFormEditProduct';
 import { Link } from 'react-router-dom';
+import { handleImageClick } from './algorithms/handleImageClick';
 
 export const FormEditProduct = () => {
   const firestore = useFirestore();
@@ -43,16 +48,6 @@ export const FormEditProduct = () => {
   const [imageOfProduct, setImageOfProduct] = useState(null);
   const [imageLocal, setImageLocal] = useState(null);
   const [localLoading, setLocalLoading] = useState(false);
-
-  const handleImageClick = (e) => {
-    e.preventDefault();
-    const imageOfProduct = document.getElementById('productImage');
-    imageOfProduct.value = null;
-    e = imageOfProduct.click();
-    imageOfProduct.addEventListener('change', async (e) => {
-      setImageOfProduct(e.target.files[0]);
-    });
-  };
 
   const onCancel = ({ setProductSelectedForEdit }) => {
     setProductSelectedForEdit(null);
@@ -253,7 +248,12 @@ export const FormEditProduct = () => {
                 style={{ display: 'none' }}
               />
               <ButtonContainer>
-                <Button secondary small type="button" onClick={handleImageClick}>
+                <Button
+                  secondary
+                  small
+                  type="button"
+                  onClick={(e) => handleImageClick(e, setImageOfProduct)}
+                >
                   Actualizar Imagen
                 </Button>
               </ButtonContainer>

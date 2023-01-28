@@ -5,7 +5,8 @@ import firebase from 'firebase/app';
 import { AppContext } from '../../../App';
 
 const Options = ({ icon, link, id }) => {
-  const { setLoading, setCurrentUser, dataOfUser, setDataOfUser } = useContext(AppContext);
+  const { setLoading, setCurrentUser, dataOfUser, setDataOfUser, currentUser } =
+    useContext(AppContext);
 
   const handleGoogleLogin = () => {
     try {
@@ -24,7 +25,10 @@ const Options = ({ icon, link, id }) => {
           };
           await sendDataUserFromGoogle(data, user.uid, () => firebase.firestore());
           //recargar la pagina
-          // window.location.reload();
+          if (!dataOfUser) {
+            setLoading({ status: true, title: 'Preparando tus datos!' });
+            window.location.reload();
+          }
           //navegar al directorio raiz
         })
         .catch((error) => {

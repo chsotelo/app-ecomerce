@@ -16,11 +16,15 @@ import Swal from 'sweetalert2';
 import NotFound from './components/notFound/MainNotFound';
 import { RoutesAdmin } from './routes/RoutesAdmin';
 import { RoutesCustomers } from './routes/RoutesCustomers';
+import AddProducts from './pages/AddProducts';
+import { recoverDataOfUser } from './algorithms/recoverDataOfUser';
+import { updateListOfWish } from './algorithms/updateListOfWish';
 
 const AppContext = React.createContext();
 const { Provider, Consumer } = AppContext;
 
 export default function App() {
+  const db = firebase.firestore();
   const [listOfWish, setListOfWish] = useState([]);
   const [addressOfUser, setAddressOfUser] = useState(null);
   const [idOfBuy, setIdOfBuy] = useState(null);
@@ -34,35 +38,9 @@ export default function App() {
   const [loading, setLoading] = useState({ status: true, title: null });
   const [allProdutsLocal, setAllProductsLocal] = useState(null);
   const [productSelectedForEdit, setProductSelectedForEdit] = useState(null);
-  const recoverDataOfUser = async (db, user) => {
-    const userRef = db.collection('users').doc(user.uid);
-    const doc = await userRef.get();
-    if (!doc.exists) {
-      console.log('Usuario nuevo!');
-    } else {
-      return doc.data();
-    }
-  };
 
   useEffect(() => {
-    if (dataOfUser) {
-      const db = firebase.firestore();
-      const userRef = db.collection('users').doc(dataOfUser.uid);
-      userRef
-        .update(
-          {
-            card: listOfWish,
-          },
-          { merge: true },
-        )
-        .then(() => {
-          console.log('Document successfully updated!');
-        })
-        .catch((error) => {
-          // The document probably doesn't exist.
-          console.error('Error updating document: ', error);
-        });
-    }
+    dataOfUser && updateListOfWish({ listOfWish, dataOfUser, db });
     return () => {};
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [listOfWish, dataOfUser]);
@@ -74,27 +52,10 @@ export default function App() {
         setLoading({ status: true, title: null });
         user ? setCurrentUser(user) : setCurrentUser(null);
         if (user) {
-          const recoverUser = await recoverDataOfUser(firebase.firestore(), user);
+          const recoverUser = await recoverDataOfUser(db, user);
+          console.log(recoverUser);
           setDataOfUser(recoverUser);
           setAddressOfUser(recoverUser?.address ?? null);
-          if (dataOfUser) {
-            const db = firebase.firestore();
-            const userRef = db.collection('users').doc(dataOfUser.uid);
-            userRef
-              .update(
-                {
-                  card: listOfWish,
-                },
-                { merge: true },
-              )
-              .then(() => {
-                console.log('Document successfully updated!');
-              })
-              .catch((error) => {
-                // The document probably doesn't exist.
-                console.error('Error updating document: ', error);
-              });
-          }
           recoverUser?.card && setListOfWish(recoverUser.card);
           const Toast = Swal.mixin({
             toast: true,
@@ -114,6 +75,7 @@ export default function App() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentUser, dataOfUser]);
 
+  useEffect(() => {}, []);
   const productValue = {
     listOfWish,
     setListOfWish,
@@ -141,7 +103,7 @@ export default function App() {
     setProductSelectedForEdit,
   };
   if ((loading.status && !currentUser) || loading.status) {
-    return <MainSpinner title={loading.title ?? 'CARGANDO DATOS!'} />;
+    return <MainSpinner title={loading.title ?? 'Cargando datos!'} />;
   }
 
   return (
@@ -157,6 +119,7 @@ export default function App() {
             <Route exact path={'/category/:category'} component={ProductsCategory} />
             <Route exact path={'/product/:id'} component={Product} />
             <Route exact path={'/purchases'} component={Purchases} />
+            <Route exact path={'/addProducts'} component={AddProducts} />
             <>
               {listOfWish.length !== 0 ? (
                 <>

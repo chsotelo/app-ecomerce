@@ -6,6 +6,7 @@ import { AppContext } from '../../../App';
 import { InputContainer, Option, Select } from '../../../styles/generalComponents';
 import { Wrapper } from '../../../styles/generalStyles';
 import Spinner from '../../spinner/Spinner';
+import { recoverDataProducts } from './algorithms/recoverDataProducts';
 import { CardToReview } from './CardToReview';
 
 export const MainEditProducts = () => {
@@ -15,16 +16,6 @@ export const MainEditProducts = () => {
 
   const [productsFiltered, setProductsFiltered] = useState('Todos');
   const [products, setProducts] = useState(null);
-
-  const recoverDataProducts = async ({ db, setLocalLoading }) => {
-    setLocalLoading(true);
-    let productsRecover = [];
-    const products = await db.collection('products').get();
-    products.forEach((product) => {
-      productsRecover.push(product.data());
-    });
-    return productsRecover;
-  };
 
   useEffect(() => {
     recoverDataProducts({ db, setLocalLoading })
