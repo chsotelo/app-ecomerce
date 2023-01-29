@@ -25,13 +25,25 @@ const MainShippingBuy = () => {
     setListOfWish,
     addressOfUser,
     dataOfCard,
+    dataOfUser,
   } = useContext(AppContext);
   const [loading, setLoading] = useState(false);
 
   const readyToBuy = async () => {
     setLoading(true);
-    await sendDataOfBuy(firestore, listOfWish, addressOfUser, dataOfCard, idOfBuy);
-    setListOfWish([]);
+    try {
+      await sendDataOfBuy(firestore, listOfWish, addressOfUser, dataOfCard, idOfBuy);
+      setListOfWish([]);
+      const userRef = firestore.collection('users').doc(dataOfUser?.uid);
+      await userRef.update(
+        {
+          checkedCard: false,
+        },
+        { merge: true },
+      );
+    } catch (error) {
+      console.log(error);
+    }
     setLoading(false);
     history.push('/purchases');
   };
