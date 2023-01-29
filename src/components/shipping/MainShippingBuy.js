@@ -22,6 +22,7 @@ const MainShippingBuy = () => {
     subTotalPrice,
     discount,
     listOfWish,
+    setListOfWish,
     addressOfUser,
     dataOfCard,
   } = useContext(AppContext);
@@ -30,6 +31,7 @@ const MainShippingBuy = () => {
   const readyToBuy = async () => {
     setLoading(true);
     await sendDataOfBuy(firestore, listOfWish, addressOfUser, dataOfCard, idOfBuy);
+    setListOfWish([]);
     setLoading(false);
     history.push('/purchases');
   };
@@ -39,9 +41,7 @@ const MainShippingBuy = () => {
   return (
     <main>
       <Wrapper secondaryWrapperNotLineBottom margin="40px auto 0 auto" width="500px">
-        <TitleContainer>
-          <TextBodyLarge>Pagar</TextBodyLarge>
-        </TitleContainer>
+        <TitleContainer>{/* <TextBodyLarge>Pagar</TextBodyLarge> */}</TitleContainer>
         <SummaryPucharse
           numberOfArticles={numberOfArticles}
           subTotalPrice={subTotalPrice}
@@ -49,7 +49,13 @@ const MainShippingBuy = () => {
           discount={discount}
         />
         <ButtonContainer>
-          <Button onClick={readyToBuy}>Realizar compra</Button>
+          <Button
+            onClick={() => {
+              readyToBuy();
+            }}
+          >
+            Terminar compra
+          </Button>
         </ButtonContainer>
       </Wrapper>
     </main>

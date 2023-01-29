@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 
 import { BrowserRouter } from 'react-router-dom';
+import { PayPalScriptProvider } from '@paypal/react-paypal-js';
 import './index.css';
 import App from './App';
 import 'firebase/auth';
@@ -12,12 +13,25 @@ import { FirebaseAppProvider } from 'reactfire';
 import { firebaseConfig } from './firebase/Config';
 import reportWebVitals from './reportWebVitals';
 
+const initialOptions = {
+  'client-id': 'test',
+  currency: 'USD',
+  intent: 'capture',
+  'data-client-token': 'abc123xyz==',
+};
+
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     <FirebaseAppProvider firebaseConfig={firebaseConfig}>
       <BrowserRouter>
-        <App />
+        <PayPalScriptProvider
+          options={{
+            'client-id': 'test',
+          }}
+        >
+          <App />
+        </PayPalScriptProvider>
       </BrowserRouter>
     </FirebaseAppProvider>
   </React.StrictMode>,

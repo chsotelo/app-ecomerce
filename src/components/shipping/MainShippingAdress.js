@@ -12,6 +12,7 @@ import {
   ButtonContainer,
   Checkbox,
 } from './../../styles/generalComponents';
+import Swal from 'sweetalert2';
 
 const MainShippingAdress = () => {
   const history = useHistory();
@@ -27,6 +28,7 @@ const MainShippingAdress = () => {
     setDiscount,
     addressOfUser,
   } = useContext(AppContext);
+
   const [buyId, setBuyId] = useState(uuidv4());
 
   useEffect(() => {
@@ -69,8 +71,21 @@ const MainShippingAdress = () => {
           discount={discount}
         />
         <ButtonContainer>
-          <Link to={'/shipping/my-credit-card'}>
-            <Button>Continuar</Button>
+          <Link to={addressOfUser ? `/shipping/my-credit-card` : null}>
+            <Button
+              onClick={
+                addressOfUser
+                  ? null
+                  : () => {
+                      Swal.fire({
+                        title: 'Agrega una direccion de envio',
+                        icon: 'warning',
+                      });
+                    }
+              }
+            >
+              Continuar
+            </Button>
           </Link>
         </ButtonContainer>
       </Wrapper>

@@ -1,6 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState, useContext } from 'react';
 import { Link } from 'react-router-dom';
+import firebase from 'firebase/app';
 import { AppContext } from '../../App';
 import { useRouteMatch, useLocation, useHistory } from 'react-router-dom';
 import { useStateIfMounted } from 'use-state-if-mounted';
@@ -28,9 +29,11 @@ import {
 import { TextBodySmall, Button, DetailsProduct } from './../../styles/generalComponents';
 import { recoverProducts } from '../home/algorithms/recoverProducts';
 import { useFirestore } from 'reactfire';
+import Swal from 'sweetalert2';
+import { handleGoogleLogin } from '../general/algorithms/handleGoogleLogin';
 
 const MainProduct = () => {
-  const { listOfWish, setListOfWish } = useContext(AppContext);
+  const { listOfWish, setListOfWish, dataOfUser, setLoading } = useContext(AppContext);
   const firestore = useFirestore();
   const history = useHistory();
   const location = useLocation();
@@ -104,11 +107,60 @@ const MainProduct = () => {
               />
             </CountContainer>
             <ButtonsContainer>
-              <Button tertiary onClick={handleAddToCar}>
+              <Button
+                tertiary
+                onClick={
+                  dataOfUser
+                    ? handleAddToCar
+                    : async () => {
+                        const { value: accept } = await Swal.fire({
+                          title: 'Iniciar sesión con para continuar',
+                          input: 'checkbox',
+                          inputValue: 1,
+                          inputPlaceholder: 'Aceptar términos y condiciones',
+                          iconHtml:
+                            '<img src="https://rotulosmatesanz.com/wp-content/uploads/2017/09/2000px-Google_G_Logo.svg_.png" height="60" width="60"/>',
+                          confirmButtonText:
+                            'Iniciar Sesión con google <i class="fa fa-arrow-right"></i>',
+                          inputValidator: (result) => {
+                            return !result && 'Necesitas aceptar los términos y condiciones';
+                          },
+                        });
+                        if (accept) {
+                          handleGoogleLogin({ dataOfUser, setLoading, firebase });
+                        }
+                      }
+                }
+              >
                 Agregar al carrito
               </Button>
-              <Link to="/my-cart">
-                <Button small left onClick={handleAddToCar}>
+              <Link to={dataOfUser ? '/my-cart' : null}>
+                <Button
+                  small
+                  left
+                  onClick={
+                    dataOfUser
+                      ? handleAddToCar
+                      : async () => {
+                          const { value: accept } = await Swal.fire({
+                            title: 'Iniciar sesión con para continuar',
+                            input: 'checkbox',
+                            inputValue: 1,
+                            inputPlaceholder: 'Aceptar términos y condiciones',
+                            iconHtml:
+                              '<img src="https://rotulosmatesanz.com/wp-content/uploads/2017/09/2000px-Google_G_Logo.svg_.png" height="60" width="60"/>',
+                            confirmButtonText:
+                              'Iniciar Sesión con google <i class="fa fa-arrow-right"></i>',
+                            inputValidator: (result) => {
+                              return !result && 'Necesitas aceptar los términos y condiciones';
+                            },
+                          });
+                          if (accept) {
+                            handleGoogleLogin({ dataOfUser, setLoading, firebase });
+                          }
+                        }
+                  }
+                >
                   comprar
                 </Button>
               </Link>

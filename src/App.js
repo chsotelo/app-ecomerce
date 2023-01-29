@@ -38,6 +38,7 @@ export default function App() {
   const [loading, setLoading] = useState({ status: true, title: null });
   const [allProdutsLocal, setAllProductsLocal] = useState(null);
   const [productSelectedForEdit, setProductSelectedForEdit] = useState(null);
+  const [pathName, setPathName] = useState('/');
 
   useEffect(() => {
     dataOfUser && updateListOfWish({ listOfWish, dataOfUser, db });
@@ -75,7 +76,6 @@ export default function App() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentUser, dataOfUser]);
 
-  useEffect(() => {}, []);
   const productValue = {
     listOfWish,
     setListOfWish,
@@ -101,6 +101,8 @@ export default function App() {
     setAllProductsLocal,
     productSelectedForEdit,
     setProductSelectedForEdit,
+    pathName,
+    setPathName,
   };
   if ((loading.status && !currentUser) || loading.status) {
     return <MainSpinner title={loading.title ?? 'Cargando datos!'} />;
