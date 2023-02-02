@@ -13,13 +13,6 @@ import { FirebaseAppProvider } from 'reactfire';
 import { firebaseConfig } from './firebase/Config';
 import reportWebVitals from './reportWebVitals';
 
-const initialOptions = {
-  'client-id': 'test',
-  currency: 'USD',
-  intent: 'capture',
-  'data-client-token': 'abc123xyz==',
-};
-
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
