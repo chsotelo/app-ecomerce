@@ -8,7 +8,7 @@ export const updateListOfWish = async ({ listOfWish, dataOfUser, db }) => {
       { merge: true },
     )
     .then(() => {
-      console.log('Document successfully updated!');
+      // console.log('Document successfully updated!');
     })
     .catch((error) => {
       // The document probably doesn't exist.

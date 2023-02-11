@@ -253,7 +253,9 @@ export const ListArticlesContainer = styled.ul`
 
 export const ButtonContainer = styled.div`
   margin: 0 0 30px 0;
-
+  label {
+    margin-top: 20px;
+  }
   .label-checkbox {
     color: green;
     font-size: 2em;

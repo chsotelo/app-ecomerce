@@ -2,7 +2,6 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 
 import { BrowserRouter } from 'react-router-dom';
-import { PayPalScriptProvider } from '@paypal/react-paypal-js';
 import './index.css';
 import App from './App';
 import 'firebase/auth';
@@ -12,6 +11,7 @@ import 'firebase/storage';
 import { FirebaseAppProvider } from 'reactfire';
 import { firebaseConfig } from './firebase/Config';
 import reportWebVitals from './reportWebVitals';
+import { PayPalScriptProvider } from '@paypal/react-paypal-js';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(

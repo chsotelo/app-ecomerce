@@ -20,6 +20,17 @@ const CategoryMixin = css`
   }
 `;
 
+export const CardPage = styled.div`
+  width: 500px;
+  height: 240px;
+  background: #0154a2;
+  border-color: ${(props) => props.theme.gray200Color};
+  border-radius: 15px;
+  margin: 0 0 20px 0;
+  padding: 20px;
+  box-shadow: 0 0 20px 0 gray;
+`;
+
 export const Wrapper = styled.div`
   padding: 0 15px;
   width: 100%;

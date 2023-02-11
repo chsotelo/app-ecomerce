@@ -55,8 +55,9 @@ const MainHome = () => {
     }
   };
 
-  listOfProducts.length === 0 && functionRecoversProducts();
-  // useEffect(() => {}, []);
+  useEffect(() => {
+    listOfMarkProducts.length === 0 && functionRecoversProducts();
+  }, []);
   // console.log('render');
 
   //TODO para ver mas productos

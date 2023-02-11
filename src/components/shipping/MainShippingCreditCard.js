@@ -23,12 +23,29 @@ import { PromotionSecurityContainer } from './styles/sShipping';
 import { ReactComponent as SecuritySVG } from './../../icons/others/security.svg';
 import { useFirestore } from 'reactfire';
 import Swal from 'sweetalert2';
+import Spinner from '../spinner/Spinner';
 
 const MainShippingCreditCard = () => {
   const db = useFirestore();
-  const { idOfBuy, numberOfArticles, subTotalPrice, discount, dataOfCard, dataOfUser } =
-    useContext(AppContext);
-  const [checked, setChecked] = useState(dataOfUser?.checkedCard ?? false);
+  const {
+    idOfBuy,
+    numberOfArticles,
+    subTotalPrice,
+    discount,
+    dataOfCard,
+    dataOfUser,
+    dataOfDollar,
+    checked,
+    setChecked,
+  } = useContext(AppContext);
+  const [loading, setLoading] = useState(false);
+  const sendPayment = () => {
+    setLoading(true);
+    setTimeout(() => {
+      setChecked(true);
+      setLoading(false);
+    }, 6000);
+  };
 
   const onHandleCkecked = async ({ db, dataOfUser, checked }) => {
     try {
@@ -52,84 +69,52 @@ const MainShippingCreditCard = () => {
   return (
     <main>
       <Wrapper secondaryWrapperNotLineBottom margin="40px auto 0 auto" width="500px">
-        <TitleContainer>
-          <TextBodyLarge>Selecciona un método de pago</TextBodyLarge>
-        </TitleContainer>
-        <form>
-          <fieldset>{dataOfCard == null ? <></> : <CardCreditCard {...dataOfCard} />}</fieldset>
-        </form>
-        <SummaryPucharse
-          numberOfArticles={numberOfArticles}
-          subTotalPrice={subTotalPrice}
-          idOfBuy={idOfBuy}
-          discount={discount}
-        />
-        <ButtonContainer center>
-          {/* <Link to="/shipping/add-credit-card">
-            <Button secondary small>Agregar tarjetas</Button>
-          </Link> */}
-
-          {!checked && (
-            <PayPalButtons
-              createOrder={(data, actions) => {
-                return actions.order.create({
-                  purchase_units: [
-                    {
-                      amount: {
-                        value: subTotalPrice - discount,
-                      },
-                    },
-                  ],
-                });
-              }}
-              onApprove={(data, actions) => {
-                return actions.order
-                  .capture()
-                  .then((details) => {
-                    const name = details.payer.name.given_name;
-                    data.authCode = details.purchase_units[0].payments.authorizations[0].id;
-                    console.log(data);
-                    setChecked(true);
-                    alert(`Transaction completed by ${name}`);
-                  })
-                  .catch((error) => {
-                    setChecked(true);
-                    console.log(error);
-                  });
-              }}
-              onShippingChange={(data, actions) => {
-                return actions.resolve().then(() => {
-                  setChecked(true);
-                  console.log(data);
-                });
-              }}
-              onError={(err) => {
-                setChecked(true);
-                console.log(err);
-              }}
+        {loading ? (
+          <Spinner title={'Concretando pago'} />
+        ) : (
+          <>
+            <TitleContainer>
+              <TextBodyLarge>Selecciona un método de pago</TextBodyLarge>
+            </TitleContainer>
+            <form>
+              <fieldset>{dataOfCard == null ? <></> : <CardCreditCard {...dataOfCard} />}</fieldset>
+            </form>
+            <SummaryPucharse
+              numberOfArticles={numberOfArticles}
+              subTotalPrice={subTotalPrice}
+              idOfBuy={idOfBuy}
+              discount={discount}
             />
-          )}
-          <>{checked && <label className="label-checkbox">Pago exitoso!</label>}</>
-        </ButtonContainer>
-        <ButtonContainer>
-          <Link to={checked ? '/shipping/buy' : null}>
-            <Button
-              onClick={
-                !checked
-                  ? () => {
-                      Swal.fire({
-                        icon: 'error',
-                        title: 'Oops...',
-                        text: 'Debes pagar para continuar',
-                      });
-                    }
-                  : null
-              }
-            >
-              {!checked ? 'Pagar para continuar' : 'Continuar'}
-            </Button>
-          </Link>
-        </ButtonContainer>
+            <ButtonContainer center>
+              {!dataOfCard && (
+                <Link to="/shipping/add-credit-card">
+                  <Button secondary small>
+                    Agregar tarjetas
+                  </Button>
+                </Link>
+              )}
+            </ButtonContainer>
+            <ButtonContainer center>
+              {checked && <label className="label-checkbox">Pago exitoso!</label>}
+            </ButtonContainer>
+            <ButtonContainer>
+              <Link to={checked ? '/shipping/buy' : null}>
+                <Button
+                  disabled={dataOfCard ? false : true}
+                  onClick={
+                    !checked
+                      ? () => {
+                          sendPayment();
+                        }
+                      : null
+                  }
+                >
+                  {!checked ? 'Pagar para continuar' : 'Continuar'}
+                </Button>
+              </Link>
+            </ButtonContainer>
+          </>
+        )}
       </Wrapper>
     </main>
   );
